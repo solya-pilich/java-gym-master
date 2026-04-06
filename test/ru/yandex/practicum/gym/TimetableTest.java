@@ -2,12 +2,12 @@ package ru.yandex.practicum.gym;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
 public class TimetableTest {
-
 
     @Test
     void testGetTrainingSessionsForDaySingleSession() {
@@ -23,7 +23,7 @@ public class TimetableTest {
         //Проверить, что за понедельник вернулось одно занятие
         TreeMap<TimeOfDay, ArrayList<TrainingSession>> dayMapMonday = timetable.getTrainingSessionsForDay(DayOfWeek.MONDAY);
         int numberOfTrainingMonday = 0;
-        for(ArrayList<TrainingSession> training: dayMapMonday.values()) {
+        for (ArrayList<TrainingSession> training : dayMapMonday.values()) {
             numberOfTrainingMonday += training.size();
         }
         assertEquals(1, numberOfTrainingMonday);
@@ -31,7 +31,7 @@ public class TimetableTest {
         //Проверить, что за вторник не вернулось занятий
         TreeMap<TimeOfDay, ArrayList<TrainingSession>> dayMapTuesday = timetable.getTrainingSessionsForDay(DayOfWeek.TUESDAY);
         int numberOfTrainingTuesday = 0;
-        for(ArrayList<TrainingSession> training: dayMapTuesday.values()) {
+        for (ArrayList<TrainingSession> training : dayMapTuesday.values()) {
             numberOfTrainingTuesday += training.size();
         }
         assertEquals(0, numberOfTrainingTuesday);
@@ -64,7 +64,7 @@ public class TimetableTest {
         // Проверить, что за понедельник вернулось одно занятие
         TreeMap<TimeOfDay, ArrayList<TrainingSession>> dayMapMonday = timetable.getTrainingSessionsForDay(DayOfWeek.MONDAY);
         int numberOfTrainingMonday = 0;
-        for(ArrayList<TrainingSession> training: dayMapMonday.values()) {
+        for (ArrayList<TrainingSession> training : dayMapMonday.values()) {
             numberOfTrainingMonday += training.size();
         }
         assertEquals(1, numberOfTrainingMonday);
@@ -72,7 +72,7 @@ public class TimetableTest {
         // Проверить, что за четверг вернулось два занятия в правильном порядке: сначала в 13:00, потом в 20:00
         TreeMap<TimeOfDay, ArrayList<TrainingSession>> dayMapThursday = timetable.getTrainingSessionsForDay(DayOfWeek.THURSDAY);
         int numberOfTrainingThursday = 0;
-        for(ArrayList<TrainingSession> training: dayMapThursday.values()) {
+        for (ArrayList<TrainingSession> training : dayMapThursday.values()) {
             numberOfTrainingThursday += training.size();
         }
         assertEquals(2, numberOfTrainingThursday); // Убедиться, что в четверг всего две записи
@@ -82,7 +82,7 @@ public class TimetableTest {
         // Проверить, что за вторник не вернулось занятий
         TreeMap<TimeOfDay, ArrayList<TrainingSession>> dayMapTuesday = timetable.getTrainingSessionsForDay(DayOfWeek.TUESDAY);
         int numberOfTrainingTuesday = 0;
-        for(ArrayList<TrainingSession> training: dayMapTuesday.values()) {
+        for (ArrayList<TrainingSession> training : dayMapTuesday.values()) {
             numberOfTrainingTuesday += training.size();
         }
         assertEquals(0, numberOfTrainingTuesday);
@@ -101,12 +101,12 @@ public class TimetableTest {
 
         //Проверить, что за понедельник в 13:00 вернулось одно занятие
         ArrayList<TrainingSession> trainingMondayAt13 = timetable.getTrainingSessionsForDayAndTime(DayOfWeek.MONDAY,
-                new TimeOfDay(13,0));
+                new TimeOfDay(13, 0));
         assertEquals(1, trainingMondayAt13.size());
 
         //Проверить, что за понедельник в 14:00 не вернулось занятий
         ArrayList<TrainingSession> trainingMondayAt14 = timetable.getTrainingSessionsForDayAndTime(DayOfWeek.MONDAY,
-                new TimeOfDay(14,0));
+                new TimeOfDay(14, 0));
         assertEquals(0, trainingMondayAt14.size());
     }
 
@@ -130,7 +130,7 @@ public class TimetableTest {
 
         // Проверить, что корректно возвращает оба занятия в одно и то же время, в один и тот же день
         ArrayList<TrainingSession> training = timetable.getTrainingSessionsForDayAndTime(DayOfWeek.WEDNESDAY,
-                new TimeOfDay(20,0));
+                new TimeOfDay(20, 0));
         assertEquals(2, training.size());
         assertTrue(training.contains(AdultTrainingSession));
         assertTrue(training.contains(ChildrenTrainingSession));
@@ -154,31 +154,14 @@ public class TimetableTest {
 
         // Проверить, что с граничными значениями времени занятия корректно добавляются и возвращаются
         ArrayList<TrainingSession> trainingAt00 = timetable.getTrainingSessionsForDayAndTime(DayOfWeek.WEDNESDAY,
-                new TimeOfDay(0,0));
+                new TimeOfDay(0, 0));
         assertEquals(1, trainingAt00.size());
         assertTrue(trainingAt00.contains(ChildrenTrainingSessionAt00));
 
         ArrayList<TrainingSession> trainingAt2359 = timetable.getTrainingSessionsForDayAndTime(DayOfWeek.WEDNESDAY,
-                new TimeOfDay(23,59));
+                new TimeOfDay(23, 59));
         assertEquals(1, trainingAt2359.size());
         assertTrue(trainingAt2359.contains(ChildrenTrainingSessionAt2359));
-    }
-
-    @Test //уже был...
-    void testOrderOfTimesWhenAddedUnsorted() {
-        Timetable timetable = new Timetable();
-
-        Coach coach = new Coach("Васильев", "Николай", "Сергеевич");
-
-        Group groupChildren = new Group("Акробатика для детей", Age.CHILD, 90);
-        TrainingSession ChildrenTrainingSessionAt15 = new TrainingSession(groupChildren, coach,
-                DayOfWeek.WEDNESDAY, new TimeOfDay(15, 0));
-
-        TrainingSession ChildrenTrainingSessionAt10 = new TrainingSession(groupChildren, coach,
-                DayOfWeek.WEDNESDAY, new TimeOfDay(10, 59));
-
-        timetable.addNewTrainingSession(ChildrenTrainingSessionAt15);
-        timetable.addNewTrainingSession(ChildrenTrainingSessionAt10);
     }
 
     @Test

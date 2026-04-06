@@ -1,7 +1,9 @@
 package ru.yandex.practicum.gym;
 
 import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
+
 import static org.junit.Assert.*;
 
 public class CounterOfTrainingsTest {
