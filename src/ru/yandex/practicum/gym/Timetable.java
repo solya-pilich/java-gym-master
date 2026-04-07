@@ -1,6 +1,7 @@
 package ru.yandex.practicum.gym;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Timetable {
 
@@ -10,16 +11,8 @@ public class Timetable {
         DayOfWeek day = trainingSession.getDayOfWeek();
         TimeOfDay time = trainingSession.getTimeOfDay();
 
-        TreeMap<TimeOfDay, ArrayList<TrainingSession>> dayMap = timetable.get(day);
-        if (dayMap == null) {
-            dayMap = new TreeMap<>();
-            timetable.put(day, dayMap);
-        }
-        ArrayList<TrainingSession> trainingList = dayMap.get(time);
-        if (trainingList == null) {
-            trainingList = new ArrayList<>();
-            dayMap.put(time, trainingList);
-        }
+        TreeMap<TimeOfDay, ArrayList<TrainingSession>> dayMap = timetable.computeIfAbsent(day, k -> new TreeMap<>());
+        ArrayList<TrainingSession> trainingList = dayMap.computeIfAbsent(time, k -> new ArrayList<>());
 
         trainingList.add(trainingSession);
     }
@@ -28,7 +21,7 @@ public class Timetable {
         return timetable.getOrDefault(dayOfWeek, new TreeMap<>());
     }
 
-    public ArrayList<TrainingSession> getTrainingSessionsForDayAndTime(DayOfWeek dayOfWeek, TimeOfDay timeOfDay) {
+    public List<TrainingSession> getTrainingSessionsForDayAndTime(DayOfWeek dayOfWeek, TimeOfDay timeOfDay) {
         TreeMap<TimeOfDay, ArrayList<TrainingSession>> dayMap = timetable.get(dayOfWeek);
         if (dayMap == null) {
             return new ArrayList<>();
@@ -36,7 +29,7 @@ public class Timetable {
         return dayMap.getOrDefault(timeOfDay, new ArrayList<>());
     }
 
-    public ArrayList<CounterOfTrainings> getCountByCoaches() {
+    public List<CounterOfTrainings> getCountByCoaches() {
         HashMap<Coach, Integer> coachMap = new HashMap<>();
         for (TreeMap<TimeOfDay, ArrayList<TrainingSession>> treeMap : timetable.values()) {
             for (ArrayList<TrainingSession> arrayList : treeMap.values()) {
@@ -46,11 +39,10 @@ public class Timetable {
                 }
             }
         }
-        ArrayList<CounterOfTrainings> coachList = new ArrayList<>();
-        for (Map.Entry<Coach, Integer> entry : coachMap.entrySet()) {
-            coachList.add(new CounterOfTrainings(entry.getKey(), entry.getValue()));
-        }
-        Collections.sort(coachList);
-        return coachList;
+
+        return coachMap.entrySet().stream()
+                .map(entry -> new CounterOfTrainings(entry.getKey(), entry.getValue()))
+                .sorted()
+                .collect(Collectors.toList());
     }
 }

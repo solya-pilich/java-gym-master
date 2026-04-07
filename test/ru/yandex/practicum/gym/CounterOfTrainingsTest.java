@@ -3,6 +3,7 @@ package ru.yandex.practicum.gym;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -23,7 +24,7 @@ public class CounterOfTrainingsTest {
         timetable.addNewTrainingSession(secondTrainingSession);
 
         // Проверяем, что для одного тренера выводится две тренировки
-        ArrayList<CounterOfTrainings> coachList = timetable.getCountByCoaches();
+        List<CounterOfTrainings> coachList = timetable.getCountByCoaches();
         assertEquals(1, coachList.size());
 
         CounterOfTrainings coachFromList = coachList.get(0);
@@ -50,7 +51,7 @@ public class CounterOfTrainingsTest {
         timetable.addNewTrainingSession(thirdTrainingSession);
 
         // Проверяем, что первым в списке коуч2, т.к. у него 2 урока, а у коуча1 всего 1 урок
-        ArrayList<CounterOfTrainings> coachList = timetable.getCountByCoaches();
+        List<CounterOfTrainings> coachList = timetable.getCountByCoaches();
         assertEquals(2, coachList.size());
 
         CounterOfTrainings coach2FromList = coachList.get(0);
@@ -67,7 +68,7 @@ public class CounterOfTrainingsTest {
         Timetable timetable = new Timetable();
 
         // Проверяем, что при пустом расписании возвращается пустой список
-        ArrayList<CounterOfTrainings> coachList = timetable.getCountByCoaches();
+        List<CounterOfTrainings> coachList = timetable.getCountByCoaches();
         assertEquals(0, coachList.size());
         assertNotNull(coachList);
     }
@@ -94,7 +95,7 @@ public class CounterOfTrainingsTest {
         timetable.addNewTrainingSession(secondTrainingSessionCoach2);
 
         // Проверяем, что при одинаковом количестве тренировок у двух трениров, они оба возвращаются, порядок может быть любым
-        ArrayList<CounterOfTrainings> coachList = timetable.getCountByCoaches();
+        List<CounterOfTrainings> coachList = timetable.getCountByCoaches();
         assertEquals(2, coachList.size());
 
         // Если добавить еще одного тренера с одной тренировкой, он должен появиться в конце списка
