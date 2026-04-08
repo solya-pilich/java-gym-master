@@ -1,20 +1,48 @@
 package ru.yandex.practicum.gym;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Timetable {
 
-    private /* как это хранить??? */ timetable;
+    private HashMap<DayOfWeek, TreeMap<TimeOfDay, ArrayList<TrainingSession>>> timetable = new HashMap<>();
 
     public void addNewTrainingSession(TrainingSession trainingSession) {
-        //сохраняем занятие в расписании
+        DayOfWeek day = trainingSession.getDayOfWeek();
+        TimeOfDay time = trainingSession.getTimeOfDay();
+
+        Map<TimeOfDay, ArrayList<TrainingSession>> dayMap = timetable.computeIfAbsent(day, k -> new TreeMap<>());
+        List<TrainingSession> trainingList = dayMap.computeIfAbsent(time, k -> new ArrayList<>());
+
+        trainingList.add(trainingSession);
     }
 
-    public /* непонятно, что возвращать */ getTrainingSessionsForDay(DayOfWeek dayOfWeek) {
-        //как реализовать, тоже непонятно, но сложность должна быть О(1)
+    public TreeMap<TimeOfDay, ArrayList<TrainingSession>> getTrainingSessionsForDay(DayOfWeek dayOfWeek) {
+        return timetable.getOrDefault(dayOfWeek, new TreeMap<>());
     }
 
-    public /* непонятно, что возвращать */ getTrainingSessionsForDayAndTime(DayOfWeek dayOfWeek, TimeOfDay timeOfDay) {
-        //как реализовать, тоже непонятно, но сложность должна быть О(1)
+    public List<TrainingSession> getTrainingSessionsForDayAndTime(DayOfWeek dayOfWeek, TimeOfDay timeOfDay) {
+        TreeMap<TimeOfDay, ArrayList<TrainingSession>> dayMap = timetable.get(dayOfWeek);
+        if (dayMap == null) {
+            return new ArrayList<>();
+        }
+        return dayMap.getOrDefault(timeOfDay, new ArrayList<>());
+    }
+
+    public List<CounterOfTrainings> getCountByCoaches() {
+        HashMap<Coach, Integer> coachMap = new HashMap<>();
+        for (TreeMap<TimeOfDay, ArrayList<TrainingSession>> treeMap : timetable.values()) {
+            for (ArrayList<TrainingSession> arrayList : treeMap.values()) {
+                for (TrainingSession trainingSession : arrayList) {
+                    Coach coach = trainingSession.getCoach();
+                    coachMap.put(coach, coachMap.getOrDefault(coach, 0) + 1);
+                }
+            }
+        }
+
+        return coachMap.entrySet().stream()
+                .map(entry -> new CounterOfTrainings(entry.getKey(), entry.getValue()))
+                .sorted()
+                .collect(Collectors.toList());
     }
 }
