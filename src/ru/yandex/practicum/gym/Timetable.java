@@ -11,8 +11,8 @@ public class Timetable {
         DayOfWeek day = trainingSession.getDayOfWeek();
         TimeOfDay time = trainingSession.getTimeOfDay();
 
-        TreeMap<TimeOfDay, ArrayList<TrainingSession>> dayMap = timetable.computeIfAbsent(day, k -> new TreeMap<>());
-        ArrayList<TrainingSession> trainingList = dayMap.computeIfAbsent(time, k -> new ArrayList<>());
+        Map<TimeOfDay, ArrayList<TrainingSession>> dayMap = timetable.computeIfAbsent(day, k -> new TreeMap<>());
+        List<TrainingSession> trainingList = dayMap.computeIfAbsent(time, k -> new ArrayList<>());
 
         trainingList.add(trainingSession);
     }
